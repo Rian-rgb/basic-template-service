@@ -23,4 +23,9 @@ func registerPaymentTypeRoutes(
 		"",
 		dependency.PaymentTypeHdl.Create,
 	)
+
+	paymentType.PUT(
+		"/:id",
+		dependency.PaymentTypeHdl.Update,
+	)
 }

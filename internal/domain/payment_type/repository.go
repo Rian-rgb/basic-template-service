@@ -1,6 +1,10 @@
 package payment_type
 
-import "context"
+import (
+	"context"
+
+	"github.com/google/uuid"
+)
 
 type IRepository interface {
 	FindAll(
@@ -15,5 +19,15 @@ type IRepository interface {
 	ExistsByName(
 		ctx context.Context,
 		name string,
+	) (bool, error)
+
+	Update(
+		ctx context.Context,
+		paymentType *Entity,
+	) error
+
+	ExistsByID(
+		ctx context.Context,
+		id uuid.UUID,
 	) (bool, error)
 }

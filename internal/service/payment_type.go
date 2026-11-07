@@ -50,3 +50,45 @@ func (svc *PaymentTypeService) Save(
 
 	return nil
 }
+
+func (svc *PaymentTypeService) Update(
+	ctx context.Context,
+	paymentType *paymentType.Entity,
+) error {
+
+	idExists, err := svc.PaymentTypeRepo.ExistsByID(ctx, paymentType.ID)
+	if err != nil {
+		logger.Error("failed to verify id existence: %s", err)
+		return internalErrors.ErrInternalServerError
+	}
+
+	if !idExists {
+		logger.Error("ID not found")
+		return fmt.Errorf(
+			"payment type %w",
+			internalErrors.ErrNotFound,
+		)
+	}
+
+	nameExists, err := svc.PaymentTypeRepo.ExistsByName(ctx, paymentType.Name)
+	if err != nil {
+		logger.Error("failed to verify name existence: %s", err)
+		return internalErrors.ErrInternalServerError
+	}
+
+	if nameExists {
+		logger.Error("payment type already exists")
+		return fmt.Errorf(
+			"payment type %w",
+			internalErrors.ErrAlreadyExists,
+		)
+	}
+
+	err = svc.PaymentTypeRepo.Update(ctx, paymentType)
+	if err != nil {
+		logger.Error("failed to update payment type: %s", err)
+		return internalErrors.ErrInternalServerError
+	}
+
+	return nil
+}

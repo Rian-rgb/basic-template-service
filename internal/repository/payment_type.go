@@ -5,6 +5,7 @@ import (
 	"basic-template-service/lib/utils"
 	"context"
 
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -46,6 +47,39 @@ func (repo *PaymentTypeRepository) ExistsByName(
 		Model(&paymentType.Entity{}).
 		WithContext(ctx).
 		Where("name = ?", name).
+		Count(&count).
+		Error
+
+	if err != nil {
+		return false, err
+	}
+
+	return count > 0, nil
+}
+
+func (repo *PaymentTypeRepository) Update(
+	ctx context.Context,
+	paymentType *paymentType.Entity,
+) error {
+	return repo.DB.Model(paymentType).
+		WithContext(ctx).
+		Where("id = ?", paymentType.ID).
+		Updates(map[string]interface{}{
+			"name": paymentType.Name,
+		}).Error
+}
+
+func (repo *PaymentTypeRepository) ExistsByID(
+	ctx context.Context,
+	id uuid.UUID,
+) (bool, error) {
+
+	var count int64
+
+	err := repo.DB.
+		Model(&paymentType.Entity{}).
+		WithContext(ctx).
+		Where("id = ?", id).
 		Count(&count).
 		Error
 

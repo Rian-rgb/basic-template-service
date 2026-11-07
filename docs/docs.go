@@ -114,6 +114,70 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/payment-type/{id}": {
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Updates a payment type and validates that the name is not already used by another payment type.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Payment Type"
+                ],
+                "summary": "Update A Payment Type",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Request Body",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/basic-template-service_internal_dto_payment_type.UpdateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/basic-template-service_lib_response.SuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/basic-template-service_lib_response.BadRequestResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "Duplicate Reference",
+                        "schema": {
+                            "$ref": "#/definitions/basic-template-service_lib_response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/basic-template-service_lib_response.ErrorResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -134,6 +198,17 @@ const docTemplate = `{
                 "id": {
                     "type": "string"
                 },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "basic-template-service_internal_dto_payment_type.UpdateRequest": {
+            "type": "object",
+            "required": [
+                "name"
+            ],
+            "properties": {
                 "name": {
                     "type": "string"
                 }
@@ -170,6 +245,23 @@ const docTemplate = `{
                 "ErrCodeInvalidPassword"
             ]
         },
+        "basic-template-service_lib_response.BadRequestResponse": {
+            "type": "object",
+            "properties": {
+                "error_code": {
+                    "$ref": "#/definitions/basic-template-service_lib_errors.Code"
+                },
+                "errors": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/basic-template-service_lib_response.ValidationErrorField"
+                    }
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
         "basic-template-service_lib_response.ErrorResponse": {
             "type": "object",
             "properties": {
@@ -189,6 +281,17 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "meta": {}
+            }
+        },
+        "basic-template-service_lib_response.ValidationErrorField": {
+            "type": "object",
+            "properties": {
+                "field": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                }
             }
         }
     }

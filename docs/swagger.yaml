@@ -14,6 +14,13 @@ definitions:
       name:
         type: string
     type: object
+  basic-template-service_internal_dto_payment_type.UpdateRequest:
+    properties:
+      name:
+        type: string
+    required:
+    - name
+    type: object
   basic-template-service_lib_errors.Code:
     enum:
     - UNKNOWN_ERROR
@@ -42,6 +49,17 @@ definitions:
     - ErrCodeUserNotFound
     - ErrCodeSessionNotFound
     - ErrCodeInvalidPassword
+  basic-template-service_lib_response.BadRequestResponse:
+    properties:
+      error_code:
+        $ref: '#/definitions/basic-template-service_lib_errors.Code'
+      errors:
+        items:
+          $ref: '#/definitions/basic-template-service_lib_response.ValidationErrorField'
+        type: array
+      message:
+        type: string
+    type: object
   basic-template-service_lib_response.ErrorResponse:
     properties:
       error_code:
@@ -55,6 +73,13 @@ definitions:
       message:
         type: string
       meta: {}
+    type: object
+  basic-template-service_lib_response.ValidationErrorField:
+    properties:
+      field:
+        type: string
+      message:
+        type: string
     type: object
 host: localhost:8080
 info:
@@ -96,6 +121,48 @@ paths:
       security:
       - BearerAuth: []
       summary: Create A New Payment Type
+      tags:
+      - Payment Type
+  /payment-type/{id}:
+    put:
+      consumes:
+      - application/json
+      description: Updates a payment type and validates that the name is not already
+        used by another payment type.
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Request Body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/basic-template-service_internal_dto_payment_type.UpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/basic-template-service_lib_response.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/basic-template-service_lib_response.BadRequestResponse'
+        "409":
+          description: Duplicate Reference
+          schema:
+            $ref: '#/definitions/basic-template-service_lib_response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/basic-template-service_lib_response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Update A Payment Type
       tags:
       - Payment Type
   /payment-type/list:

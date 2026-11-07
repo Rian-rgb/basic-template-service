@@ -11,4 +11,9 @@ type IService interface {
 		ctx context.Context,
 		paymentType *Entity,
 	) error
+
+	Update(
+		ctx context.Context,
+		paymentType *Entity,
+	) error
 }
