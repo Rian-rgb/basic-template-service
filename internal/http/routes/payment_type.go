@@ -16,6 +16,6 @@ func registerPaymentTypeRoutes(
 
 	paymentType.GET(
 		"/list",
-		dependency.PaymentTypeHdl.GetAll,
+		dependency.PaymentTypeHdl.GetList,
 	)
 }

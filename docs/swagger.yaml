@@ -1,6 +1,6 @@
 basePath: /api/v1
 definitions:
-  basic-template-service_internal_dto_payment_type.GetAllResponse:
+  basic-template-service_internal_dto_payment_type.GetListResponse:
     properties:
       id:
         type: string
@@ -75,7 +75,7 @@ paths:
             - properties:
                 data:
                   items:
-                    $ref: '#/definitions/basic-template-service_internal_dto_payment_type.GetAllResponse'
+                    $ref: '#/definitions/basic-template-service_internal_dto_payment_type.GetListResponse'
                   type: array
               type: object
         "500":

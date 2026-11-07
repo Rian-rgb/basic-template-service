@@ -47,7 +47,7 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/basic-template-service_internal_dto_payment_type.GetAllResponse"
+                                                "$ref": "#/definitions/basic-template-service_internal_dto_payment_type.GetListResponse"
                                             }
                                         }
                                     }
@@ -66,7 +66,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "basic-template-service_internal_dto_payment_type.GetAllResponse": {
+        "basic-template-service_internal_dto_payment_type.GetListResponse": {
             "type": "object",
             "properties": {
                 "id": {

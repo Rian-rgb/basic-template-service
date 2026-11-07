@@ -4,7 +4,7 @@ import (
 	"github.com/google/uuid"
 )
 
-type GetAllResponse struct {
+type GetListResponse struct {
 	ID   uuid.UUID `json:"id"`
 	Name string    `json:"name"`
 }

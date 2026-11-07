@@ -5,5 +5,5 @@ import (
 )
 
 type IHandler interface {
-	GetAll(ctx *gin.Context)
+	GetList(ctx *gin.Context)
 }

@@ -41,7 +41,7 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/basic-template-service_internal_dto_payment_type.GetAllResponse"
+                                                "$ref": "#/definitions/basic-template-service_internal_dto_payment_type.GetListResponse"
                                             }
                                         }
                                     }
@@ -60,7 +60,7 @@
         }
     },
     "definitions": {
-        "basic-template-service_internal_dto_payment_type.GetAllResponse": {
+        "basic-template-service_internal_dto_payment_type.GetListResponse": {
             "type": "object",
             "properties": {
                 "id": {

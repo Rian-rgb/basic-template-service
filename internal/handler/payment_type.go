@@ -21,12 +21,12 @@ type PaymentTypeHandler struct {
 // @Accept		json
 // @Produce		json
 //
-// @Success		200	{object}	response.SuccessResponse{data=[]paymentTypeDTO.GetAllResponse}		"Success"
+// @Success		200	{object}	response.SuccessResponse{data=[]paymentTypeDTO.GetListResponse}		"Success"
 // @Failure		500	{object}	response.ErrorResponse												"Internal Server Error"
 //
 // @Security	BearerAuth
 // @Router		/payment-type/list [get]
-func (hdl *PaymentTypeHandler) GetAll(ctx *gin.Context) {
+func (hdl *PaymentTypeHandler) GetList(ctx *gin.Context) {
 
 	paymentTypeEntities, err := hdl.PaymentTypeSvc.GetAll(ctx.Request.Context())
 	if err != nil {
@@ -34,10 +34,10 @@ func (hdl *PaymentTypeHandler) GetAll(ctx *gin.Context) {
 		return
 	}
 
-	paymentTypeListDTO := make([]paymentTypeDTO.GetAllResponse, 0, len(paymentTypeEntities))
+	paymentTypeListDTO := make([]paymentTypeDTO.GetListResponse, 0, len(paymentTypeEntities))
 
 	for _, user := range paymentTypeEntities {
-		paymentTypeListDTO = append(paymentTypeListDTO, paymentTypeDTO.GetAllResponse{
+		paymentTypeListDTO = append(paymentTypeListDTO, paymentTypeDTO.GetListResponse{
 			ID:   user.ID,
 			Name: user.Name,
 		})
