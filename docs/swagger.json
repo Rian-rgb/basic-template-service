@@ -1,0 +1,127 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "API for managing basic CRUD API.\n\u003cbr/\u003e\u003cb\u003eDeveloper:\u003c/b\u003e Muhammad Brilian Satria Utama\n\u003cb\u003eEnvironment:\u003c/b\u003e Development",
+        "title": "Basic Template API",
+        "contact": {},
+        "version": "0.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/api/v1",
+    "paths": {
+        "/payment-type/list": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Gets all available payment types.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Payment Type"
+                ],
+                "summary": "Get Payment Types",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/basic-template-service_lib_response.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/basic-template-service_internal_dto_payment_type.GetAllResponse"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/basic-template-service_lib_response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "basic-template-service_internal_dto_payment_type.GetAllResponse": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "basic-template-service_lib_errors.Code": {
+            "type": "string",
+            "enum": [
+                "UNKNOWN_ERROR",
+                "INTERNAL_SERVER_ERROR",
+                "BAD_REQUEST",
+                "UNAUTHORIZED",
+                "DUPLICATE_REFERENCE",
+                "FORBIDDEN",
+                "NOT_FOUND",
+                "FINANCIAL_REPORT_ALREADY_UPLOADED",
+                "TOO_MANY_REQUESTS",
+                "USER_NOT_FOUND",
+                "SESSION_NOT_FOUND",
+                "INVALID_PASSWORD"
+            ],
+            "x-enum-varnames": [
+                "ErrCodeUnknown",
+                "ErrCodeInternalServerError",
+                "ErrCodeBadRequest",
+                "ErrCodeUnauthorized",
+                "ErrCodeDuplicateReference",
+                "ErrCodeForbidden",
+                "ErrCodeNotFound",
+                "ErrCodeFinancialReportAlreadyUploaded",
+                "ErrCodeTooManyRequests",
+                "ErrCodeUserNotFound",
+                "ErrCodeSessionNotFound",
+                "ErrCodeInvalidPassword"
+            ]
+        },
+        "basic-template-service_lib_response.ErrorResponse": {
+            "type": "object",
+            "properties": {
+                "error_code": {
+                    "$ref": "#/definitions/basic-template-service_lib_errors.Code"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "basic-template-service_lib_response.SuccessResponse": {
+            "type": "object",
+            "properties": {
+                "data": {},
+                "message": {
+                    "type": "string"
+                },
+                "meta": {}
+            }
+        }
+    }
+}

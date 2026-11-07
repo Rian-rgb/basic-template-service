@@ -1,0 +1,90 @@
+basePath: /api/v1
+definitions:
+  basic-template-service_internal_dto_payment_type.GetAllResponse:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+    type: object
+  basic-template-service_lib_errors.Code:
+    enum:
+    - UNKNOWN_ERROR
+    - INTERNAL_SERVER_ERROR
+    - BAD_REQUEST
+    - UNAUTHORIZED
+    - DUPLICATE_REFERENCE
+    - FORBIDDEN
+    - NOT_FOUND
+    - FINANCIAL_REPORT_ALREADY_UPLOADED
+    - TOO_MANY_REQUESTS
+    - USER_NOT_FOUND
+    - SESSION_NOT_FOUND
+    - INVALID_PASSWORD
+    type: string
+    x-enum-varnames:
+    - ErrCodeUnknown
+    - ErrCodeInternalServerError
+    - ErrCodeBadRequest
+    - ErrCodeUnauthorized
+    - ErrCodeDuplicateReference
+    - ErrCodeForbidden
+    - ErrCodeNotFound
+    - ErrCodeFinancialReportAlreadyUploaded
+    - ErrCodeTooManyRequests
+    - ErrCodeUserNotFound
+    - ErrCodeSessionNotFound
+    - ErrCodeInvalidPassword
+  basic-template-service_lib_response.ErrorResponse:
+    properties:
+      error_code:
+        $ref: '#/definitions/basic-template-service_lib_errors.Code'
+      message:
+        type: string
+    type: object
+  basic-template-service_lib_response.SuccessResponse:
+    properties:
+      data: {}
+      message:
+        type: string
+      meta: {}
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: |-
+    API for managing basic CRUD API.
+    <br/><b>Developer:</b> Muhammad Brilian Satria Utama
+    <b>Environment:</b> Development
+  title: Basic Template API
+  version: "0.0"
+paths:
+  /payment-type/list:
+    get:
+      consumes:
+      - application/json
+      description: Gets all available payment types.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            allOf:
+            - $ref: '#/definitions/basic-template-service_lib_response.SuccessResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/basic-template-service_internal_dto_payment_type.GetAllResponse'
+                  type: array
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/basic-template-service_lib_response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get Payment Types
+      tags:
+      - Payment Type
+swagger: "2.0"
