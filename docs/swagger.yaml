@@ -1,5 +1,12 @@
 basePath: /api/v1
 definitions:
+  basic-template-service_internal_dto_payment_type.CreateRequest:
+    properties:
+      name:
+        type: string
+    required:
+    - name
+    type: object
   basic-template-service_internal_dto_payment_type.GetListResponse:
     properties:
       id:
@@ -59,6 +66,38 @@ info:
   title: Basic Template API
   version: "0.0"
 paths:
+  /payment-type:
+    post:
+      consumes:
+      - application/json
+      description: Creates a new payment type.
+      parameters:
+      - description: Request Body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/basic-template-service_internal_dto_payment_type.CreateRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/basic-template-service_lib_response.SuccessResponse'
+        "409":
+          description: Duplicate Reference
+          schema:
+            $ref: '#/definitions/basic-template-service_lib_response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/basic-template-service_lib_response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Create A New Payment Type
+      tags:
+      - Payment Type
   /payment-type/list:
     get:
       consumes:

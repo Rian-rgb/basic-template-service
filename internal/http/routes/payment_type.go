@@ -18,4 +18,9 @@ func registerPaymentTypeRoutes(
 		"/list",
 		dependency.PaymentTypeHdl.GetList,
 	)
+
+	paymentType.POST(
+		"",
+		dependency.PaymentTypeHdl.Create,
+	)
 }

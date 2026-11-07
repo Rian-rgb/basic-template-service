@@ -6,4 +6,5 @@ import (
 
 type IHandler interface {
 	GetList(ctx *gin.Context)
+	Create(ctx *gin.Context)
 }

@@ -15,6 +15,57 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/payment-type": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Creates a new payment type.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Payment Type"
+                ],
+                "summary": "Create A New Payment Type",
+                "parameters": [
+                    {
+                        "description": "Request Body",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/basic-template-service_internal_dto_payment_type.CreateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/basic-template-service_lib_response.SuccessResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "Duplicate Reference",
+                        "schema": {
+                            "$ref": "#/definitions/basic-template-service_lib_response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/basic-template-service_lib_response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/payment-type/list": {
             "get": {
                 "security": [
@@ -66,6 +117,17 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "basic-template-service_internal_dto_payment_type.CreateRequest": {
+            "type": "object",
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
         "basic-template-service_internal_dto_payment_type.GetListResponse": {
             "type": "object",
             "properties": {

@@ -3,5 +3,12 @@ package payment_type
 import "context"
 
 type IService interface {
-	GetAll(ctx context.Context) ([]Entity, error)
+	GetList(
+		ctx context.Context,
+	) ([]Entity, error)
+
+	Save(
+		ctx context.Context,
+		paymentType *Entity,
+	) error
 }
