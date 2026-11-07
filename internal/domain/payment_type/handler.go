@@ -10,4 +10,5 @@ type IHandler interface {
 	Update(ctx *gin.Context)
 	Delete(ctx *gin.Context)
 	GetDetail(ctx *gin.Context)
+	GetPagination(ctx *gin.Context)
 }

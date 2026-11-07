@@ -40,4 +40,13 @@ type IRepository interface {
 		ctx context.Context,
 		id uuid.UUID,
 	) (paymentTypeEntity *Entity, err error)
+
+	FindPagination(
+		ctx context.Context,
+		search string,
+		offset int,
+		limit int,
+		sort string,
+		sortBy string,
+	) (paymentTypeEntities []Entity, totalData int64, err error)
 }

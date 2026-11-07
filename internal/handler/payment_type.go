@@ -2,6 +2,7 @@ package handler
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/google/uuid"
 
@@ -10,6 +11,7 @@ import (
 	"basic-template-service/internal/errors"
 	"basic-template-service/lib/logger"
 	"basic-template-service/lib/response"
+	"basic-template-service/lib/utils"
 
 	appErrors "basic-template-service/lib/errors"
 
@@ -222,4 +224,83 @@ func (hdl *PaymentTypeHandler) GetDetail(ctx *gin.Context) {
 	}
 
 	response.SendSuccess(ctx, http.StatusOK, response.SuccessMessage, resp)
+}
+
+// @Summary		Get Payment Types with Pagination
+// @Description	Gets payment types with pagination.
+// @Tags		Payment Type
+// @Accept		json
+// @Produce		json
+//
+// @Param 		search 			query 	string 	false 	"Search by name"
+// @Param       page           	query   int     false  	"Page number"													default(1)
+// @Param       limit          	query   int     false  	"Number of items per page"										default(10)
+// @Param 		sortBy 			query 	string 	false 	"Column to sort by" 			Enums(name,is_active) 			default(name)
+// @Param 		sort   			query 	string 	false 	"Sort direction"    			Enums(asc,desc) 				default(asc)
+//
+// @Success		200	{object}	response.SuccessResponse{data=[]paymentTypeDTO.GetPaginationResponse}			"Success"
+// @Failure		500	{object}	response.ErrorResponse																	"Internal Server Error"
+//
+// @Router		/payment-type/pagination [get]
+func (hdl *PaymentTypeHandler) GetPagination(ctx *gin.Context) {
+
+	var (
+		search                     = ctx.Query("search")
+		sortBy                     = ctx.Query("sortBy")
+		sort                       = ctx.Query("sort")
+		page                       int
+		limit                      int
+		errCodeInternalServerError = appErrors.ErrCodeInternalServerError
+	)
+
+	page, err := strconv.Atoi(ctx.DefaultQuery("page", "1"))
+	if err != nil {
+		logger.Error("page failed to convert to int")
+		response.SendError(ctx, errCodeInternalServerError.ToHTTPStatus(), errCodeInternalServerError, response.InternalServerErrorMessage)
+		return
+	}
+
+	limit, err = strconv.Atoi(ctx.DefaultQuery("limit", "10"))
+	if err != nil {
+		logger.Error("size failed to convert to int")
+		response.SendError(ctx, errCodeInternalServerError.ToHTTPStatus(), errCodeInternalServerError, response.InternalServerErrorMessage)
+		return
+	}
+
+	pagination := utils.ValidatePagination(
+		page,
+		limit,
+	)
+
+	paymentTypeEntities, totalPage, totalData, err := hdl.PaymentTypeSvc.GetPagination(
+		ctx.Request.Context(),
+		search,
+		pagination.Offset,
+		pagination.Limit,
+		sort,
+		sortBy,
+	)
+	if err != nil {
+		errors.HandleServiceError(ctx, err)
+		return
+	}
+
+	respListData := make([]paymentTypeDTO.GetPaginationResponse, 0, len(paymentTypeEntities))
+
+	for _, paymentType := range paymentTypeEntities {
+		respListData = append(respListData, paymentTypeDTO.GetPaginationResponse{
+			ID:       paymentType.ID,
+			Name:     paymentType.Name,
+			IsActive: paymentType.IsActive,
+		})
+	}
+
+	respMeta := response.PaginationMeta{
+		CurrentPage: pagination.Page,
+		PageSize:    pagination.Limit,
+		TotalPage:   totalPage,
+		TotalData:   totalData,
+	}
+
+	response.SendSuccessWithMeta(ctx, http.StatusOK, response.SuccessMessage, respListData, respMeta)
 }

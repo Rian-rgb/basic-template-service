@@ -30,4 +30,13 @@ type IService interface {
 		ctx context.Context,
 		id uuid.UUID,
 	) (*Entity, error)
+
+	GetPagination(
+		ctx context.Context,
+		search string,
+		offset int,
+		limit int,
+		sort string,
+		sortBy string,
+	) (paymentTypeEntities []Entity, totalPage int, totalData int64, err error)
 }

@@ -6,6 +6,7 @@ import (
 	"basic-template-service/lib/logger"
 	"context"
 	"fmt"
+	"math"
 
 	"github.com/google/uuid"
 )
@@ -125,4 +126,36 @@ func (svc *PaymentTypeService) GetDetail(
 	}
 
 	return paymentTypeEntity, nil
+}
+
+func (svc *PaymentTypeService) GetPagination(
+	ctx context.Context,
+	search string,
+	offset int,
+	limit int,
+	sort string,
+	sortBy string,
+) (paymentTypeEntities []paymentType.Entity, totalPage int, totalData int64, err error) {
+
+	paymentTypeEntities, totalData, err = svc.PaymentTypeRepo.FindPagination(
+		ctx,
+		search,
+		offset,
+		limit,
+		sort,
+		sortBy,
+	)
+
+	if err != nil {
+		logger.Error("failed to find pagination: %s", err)
+		return nil, 0, 0, internalErrors.ErrInternalServerError
+	}
+
+	totalPage = int(
+		math.Ceil(
+			float64(totalData) / float64(limit),
+		),
+	)
+
+	return paymentTypeEntities, totalPage, totalData, nil
 }

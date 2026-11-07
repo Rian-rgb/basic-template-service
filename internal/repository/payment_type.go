@@ -4,6 +4,7 @@ import (
 	paymentType "basic-template-service/internal/domain/payment_type"
 	"basic-template-service/lib/utils"
 	"context"
+	"strings"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"
@@ -113,4 +114,55 @@ func (repo *PaymentTypeRepository) FindByID(
 		Error
 
 	return paymentTypeEntity, err
+}
+
+func (repo *PaymentTypeRepository) FindPagination(
+	ctx context.Context,
+	search string,
+	offset int,
+	limit int,
+	sort string,
+	sortBy string,
+) (paymentTypeEntities []paymentType.Entity, totalData int64, err error) {
+
+	query := repo.DB.Model(&paymentType.Entity{})
+
+	if search != "" {
+		search := "%" + search + "%"
+		query = query.Where(
+			"name ILIKE ?",
+			search,
+		)
+	}
+
+	if err := query.Count(&totalData).Error; err != nil {
+		return nil, 0, err
+	}
+
+	allowedColumns := map[string]string{
+		"name":      "name",
+		"is_active": "is_active",
+	}
+
+	sortByData, sortData := utils.ValidateSort(
+		sortBy,
+		sort,
+		allowedColumns,
+		"name",
+		"asc",
+	)
+
+	orderBy := allowedColumns[sortByData] + " " + strings.ToUpper(sortData)
+
+	err = query.
+		Order(orderBy).
+		Limit(limit).
+		Offset(offset).
+		Find(&paymentTypeEntities).Error
+
+	if err != nil {
+		return nil, 0, err
+	}
+
+	return paymentTypeEntities, totalData, nil
 }

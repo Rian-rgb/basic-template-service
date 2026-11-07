@@ -23,6 +23,15 @@ definitions:
       name:
         type: string
     type: object
+  basic-template-service_internal_dto_payment_type.GetPaginationResponse:
+    properties:
+      id:
+        type: string
+      is_active:
+        type: boolean
+      name:
+        type: string
+    type: object
   basic-template-service_internal_dto_payment_type.UpdateRequest:
     properties:
       name:
@@ -259,6 +268,63 @@ paths:
           schema:
             $ref: '#/definitions/basic-template-service_lib_response.ErrorResponse'
       summary: Get Payment Types
+      tags:
+      - Payment Type
+  /payment-type/pagination:
+    get:
+      consumes:
+      - application/json
+      description: Gets payment types with pagination.
+      parameters:
+      - description: Search by name
+        in: query
+        name: search
+        type: string
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: Number of items per page
+        in: query
+        name: limit
+        type: integer
+      - default: name
+        description: Column to sort by
+        enum:
+        - name
+        - is_active
+        in: query
+        name: sortBy
+        type: string
+      - default: asc
+        description: Sort direction
+        enum:
+        - asc
+        - desc
+        in: query
+        name: sort
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            allOf:
+            - $ref: '#/definitions/basic-template-service_lib_response.SuccessResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/basic-template-service_internal_dto_payment_type.GetPaginationResponse'
+                  type: array
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/basic-template-service_lib_response.ErrorResponse'
+      summary: Get Payment Types with Pagination
       tags:
       - Payment Type
 swagger: "2.0"

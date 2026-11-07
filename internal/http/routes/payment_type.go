@@ -38,4 +38,9 @@ func registerPaymentTypeRoutes(
 		"/:id",
 		dependency.PaymentTypeHdl.GetDetail,
 	)
+
+	paymentType.GET(
+		"/pagination",
+		dependency.PaymentTypeHdl.GetPagination,
+	)
 }
