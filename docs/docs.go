@@ -17,11 +17,6 @@ const docTemplate = `{
     "paths": {
         "/payment-type": {
             "post": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
                 "description": "Creates a new payment type.",
                 "consumes": [
                     "application/json"
@@ -68,11 +63,6 @@ const docTemplate = `{
         },
         "/payment-type/list": {
             "get": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
                 "description": "Gets all available payment types.",
                 "consumes": [
                     "application/json"
@@ -117,11 +107,6 @@ const docTemplate = `{
         },
         "/payment-type/{id}": {
             "put": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
                 "description": "Updates a payment type and validates that the name is not already used by another payment type.",
                 "consumes": [
                     "application/json"
@@ -166,6 +151,48 @@ const docTemplate = `{
                     },
                     "409": {
                         "description": "Duplicate Reference",
+                        "schema": {
+                            "$ref": "#/definitions/basic-template-service_lib_response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/basic-template-service_lib_response.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Deletes a payment type by ID.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Payment Type"
+                ],
+                "summary": "Delete A Payment Type",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/basic-template-service_lib_response.SuccessResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
                         "schema": {
                             "$ref": "#/definitions/basic-template-service_lib_response.ErrorResponse"
                         }

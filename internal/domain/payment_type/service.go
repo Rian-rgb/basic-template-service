@@ -1,6 +1,10 @@
 package payment_type
 
-import "context"
+import (
+	"context"
+
+	"github.com/google/uuid"
+)
 
 type IService interface {
 	GetList(
@@ -15,5 +19,10 @@ type IService interface {
 	Update(
 		ctx context.Context,
 		paymentType *Entity,
+	) error
+
+	DeleteByID(
+		ctx context.Context,
+		id uuid.UUID,
 	) error
 }

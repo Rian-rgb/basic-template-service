@@ -6,6 +6,8 @@ import (
 	"basic-template-service/lib/logger"
 	"context"
 	"fmt"
+
+	"github.com/google/uuid"
 )
 
 type PaymentTypeService struct {
@@ -87,6 +89,21 @@ func (svc *PaymentTypeService) Update(
 	err = svc.PaymentTypeRepo.Update(ctx, paymentType)
 	if err != nil {
 		logger.Error("failed to update payment type: %s", err)
+		return internalErrors.ErrInternalServerError
+	}
+
+	return nil
+}
+
+func (svc *PaymentTypeService) DeleteByID(
+	ctx context.Context,
+	id uuid.UUID,
+) error {
+
+	err := svc.PaymentTypeRepo.DeleteByID(ctx, id)
+	if err != nil {
+
+		logger.Error("failed to delete payment type by ID: %s", err)
 		return internalErrors.ErrInternalServerError
 	}
 

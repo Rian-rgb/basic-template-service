@@ -118,12 +118,38 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/basic-template-service_lib_response.ErrorResponse'
-      security:
-      - BearerAuth: []
       summary: Create A New Payment Type
       tags:
       - Payment Type
   /payment-type/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes a payment type by ID.
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/basic-template-service_lib_response.SuccessResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/basic-template-service_lib_response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/basic-template-service_lib_response.ErrorResponse'
+      summary: Delete A Payment Type
+      tags:
+      - Payment Type
     put:
       consumes:
       - application/json
@@ -160,8 +186,6 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/basic-template-service_lib_response.ErrorResponse'
-      security:
-      - BearerAuth: []
       summary: Update A Payment Type
       tags:
       - Payment Type
@@ -188,8 +212,6 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/basic-template-service_lib_response.ErrorResponse'
-      security:
-      - BearerAuth: []
       summary: Get Payment Types
       tags:
       - Payment Type

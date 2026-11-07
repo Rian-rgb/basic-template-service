@@ -30,4 +30,14 @@ type IRepository interface {
 		ctx context.Context,
 		id uuid.UUID,
 	) (bool, error)
+
+	DeleteByID(
+		ctx context.Context,
+		id uuid.UUID,
+	) error
+
+	FindByID(
+		ctx context.Context,
+		id uuid.UUID,
+	) (paymentTypeEntity *Entity, err error)
 }

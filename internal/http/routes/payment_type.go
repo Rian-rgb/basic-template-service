@@ -28,4 +28,9 @@ func registerPaymentTypeRoutes(
 		"/:id",
 		dependency.PaymentTypeHdl.Update,
 	)
+
+	paymentType.DELETE(
+		"/:id",
+		dependency.PaymentTypeHdl.Delete,
+	)
 }

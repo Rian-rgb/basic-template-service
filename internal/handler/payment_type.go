@@ -29,7 +29,6 @@ type PaymentTypeHandler struct {
 // @Success		200	{object}	response.SuccessResponse{data=[]paymentTypeDTO.GetListResponse}		"Success"
 // @Failure		500	{object}	response.ErrorResponse												"Internal Server Error"
 //
-// @Security	BearerAuth
 // @Router		/payment-type/list [get]
 func (hdl *PaymentTypeHandler) GetList(ctx *gin.Context) {
 
@@ -65,7 +64,6 @@ func (hdl *PaymentTypeHandler) GetList(ctx *gin.Context) {
 // @Failure		409	{object}	response.ErrorResponse						"Duplicate Reference"
 // @Failure		500	{object}	response.ErrorResponse						"Internal Server Error"
 //
-// @Security	BearerAuth
 // @Router		/payment-type [post]
 func (hdl *PaymentTypeHandler) Create(ctx *gin.Context) {
 	var (
@@ -110,7 +108,6 @@ func (hdl *PaymentTypeHandler) Create(ctx *gin.Context) {
 // @Failure		409	{object}	response.ErrorResponse						"Duplicate Reference"
 // @Failure		500	{object}	response.ErrorResponse						"Internal Server Error"
 //
-// @Security	BearerAuth
 // @Router		/payment-type/{id} [put]
 func (hdl *PaymentTypeHandler) Update(ctx *gin.Context) {
 	var (
@@ -142,6 +139,41 @@ func (hdl *PaymentTypeHandler) Update(ctx *gin.Context) {
 
 	paymentTypeEntity := req.ToEntity(id)
 	err = hdl.PaymentTypeSvc.Update(ctx.Request.Context(), paymentTypeEntity)
+	if err != nil {
+		errors.HandleServiceError(ctx, err)
+		return
+	}
+
+	response.SendSuccess(ctx, http.StatusOK, response.SuccessMessage, nil)
+}
+
+// @Summary		Delete A Payment Type
+// @Description	Deletes a payment type by ID.
+// @Tags		Payment Type
+// @Accept		json
+// @Produce		json
+//
+// @Param       id              path    string                      true    "ID"
+//
+// @Success		200	{object}	response.SuccessResponse					"Success"
+// @Failure		401	{object}	response.ErrorResponse						"Unauthorized"
+// @Failure		500	{object}	response.ErrorResponse						"Internal Server Error"
+//
+// @Router		/payment-type/{id} [delete]
+func (hdl *PaymentTypeHandler) Delete(ctx *gin.Context) {
+	var (
+		errCodeUnauthorized = appErrors.ErrCodeUnauthorized
+	)
+
+	idString := ctx.Param("id")
+	id, err := uuid.Parse(idString)
+	if err != nil {
+		logger.Error("Invalid ID")
+		response.SendError(ctx, errCodeUnauthorized.ToHTTPStatus(), errCodeUnauthorized, response.InvalidIDMessage)
+		return
+	}
+
+	err = hdl.PaymentTypeSvc.DeleteByID(ctx.Request.Context(), id)
 	if err != nil {
 		errors.HandleServiceError(ctx, err)
 		return

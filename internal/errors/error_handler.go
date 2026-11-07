@@ -12,7 +12,7 @@ import (
 func HandleServiceError(ctx *gin.Context, err error) {
 	var (
 		errCodeDuplicateReference  = appErrors.ErrCodeDuplicateReference
-		errCodeUnauthorized        = appErrors.ErrCodeUnauthorized
+		errCodeNotFound            = appErrors.ErrCodeNotFound
 		errCodeInternalServerError = appErrors.ErrCodeInternalServerError
 		errCodeUnknown             = appErrors.ErrCodeUnknown
 	)
@@ -27,7 +27,7 @@ func HandleServiceError(ctx *gin.Context, err error) {
 
 	case errors.Is(err, ErrNotFound):
 
-		response.SendError(ctx, errCodeUnauthorized.ToHTTPStatus(), errCodeUnauthorized, err.Error())
+		response.SendError(ctx, errCodeNotFound.ToHTTPStatus(), errCodeNotFound, err.Error())
 
 	case errors.Is(err, ErrInternalServerError):
 		response.SendError(ctx, errCodeInternalServerError.ToHTTPStatus(), errCodeInternalServerError, err.Error())

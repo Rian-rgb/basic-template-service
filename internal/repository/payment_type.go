@@ -89,3 +89,28 @@ func (repo *PaymentTypeRepository) ExistsByID(
 
 	return count > 0, nil
 }
+
+func (repo *PaymentTypeRepository) DeleteByID(
+	ctx context.Context,
+	id uuid.UUID,
+) error {
+	return repo.DB.
+		WithContext(ctx).
+		Where("id = ?", id).
+		Delete(&paymentType.Entity{}).
+		Error
+}
+
+func (repo *PaymentTypeRepository) FindByID(
+	ctx context.Context,
+	id uuid.UUID,
+) (paymentTypeEntity *paymentType.Entity, err error) {
+
+	err = repo.DB.
+		WithContext(ctx).
+		Where("id = ?", id).
+		First(&paymentTypeEntity).
+		Error
+
+	return paymentTypeEntity, err
+}
