@@ -9,4 +9,5 @@ type IHandler interface {
 	Create(ctx *gin.Context)
 	Update(ctx *gin.Context)
 	Delete(ctx *gin.Context)
+	GetDetail(ctx *gin.Context)
 }

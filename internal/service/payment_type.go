@@ -109,3 +109,20 @@ func (svc *PaymentTypeService) DeleteByID(
 
 	return nil
 }
+
+func (svc *PaymentTypeService) GetDetail(
+	ctx context.Context,
+	id uuid.UUID,
+) (*paymentType.Entity, error) {
+
+	paymentTypeEntity, err := svc.PaymentTypeRepo.FindByID(ctx, id)
+	if err != nil {
+		logger.Error("failed to verify id existence: %s", err)
+		return nil, fmt.Errorf(
+			"payment type %w",
+			internalErrors.ErrNotFound,
+		)
+	}
+
+	return paymentTypeEntity, nil
+}

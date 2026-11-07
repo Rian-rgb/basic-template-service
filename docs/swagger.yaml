@@ -7,6 +7,15 @@ definitions:
     required:
     - name
     type: object
+  basic-template-service_internal_dto_payment_type.GetDetailResponse:
+    properties:
+      id:
+        type: string
+      is_active:
+        type: boolean
+      name:
+        type: string
+    type: object
   basic-template-service_internal_dto_payment_type.GetListResponse:
     properties:
       id:
@@ -148,6 +157,43 @@ paths:
           schema:
             $ref: '#/definitions/basic-template-service_lib_response.ErrorResponse'
       summary: Delete A Payment Type
+      tags:
+      - Payment Type
+    get:
+      consumes:
+      - application/json
+      description: Gets payment type detail by ID.
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            allOf:
+            - $ref: '#/definitions/basic-template-service_lib_response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/basic-template-service_internal_dto_payment_type.GetDetailResponse'
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/basic-template-service_lib_response.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/basic-template-service_lib_response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/basic-template-service_lib_response.ErrorResponse'
+      summary: Get Payment Type Detail
       tags:
       - Payment Type
     put:

@@ -181,3 +181,45 @@ func (hdl *PaymentTypeHandler) Delete(ctx *gin.Context) {
 
 	response.SendSuccess(ctx, http.StatusOK, response.SuccessMessage, nil)
 }
+
+// @Summary		Get Payment Type Detail
+// @Description	Gets payment type detail by ID.
+// @Tags		Payment Type
+// @Accept		json
+// @Produce		json
+//
+// @Param       id              path    string                      true    "ID"
+//
+// @Success		200	{object}	response.SuccessResponse{data=paymentTypeDTO.GetDetailResponse}		"Success"
+// @Failure		401	{object}	response.ErrorResponse												"Unauthorized"
+// @Failure		404	{object}	response.ErrorResponse												"Not Found"
+// @Failure		500	{object}	response.ErrorResponse												"Internal Server Error"
+//
+// @Router		/payment-type/{id} [get]
+func (hdl *PaymentTypeHandler) GetDetail(ctx *gin.Context) {
+	var (
+		errCodeUnauthorized = appErrors.ErrCodeUnauthorized
+	)
+
+	idString := ctx.Param("id")
+	id, err := uuid.Parse(idString)
+	if err != nil {
+		logger.Error("Invalid ID")
+		response.SendError(ctx, errCodeUnauthorized.ToHTTPStatus(), errCodeUnauthorized, response.InvalidIDMessage)
+		return
+	}
+
+	paymentTypeEntity, err := hdl.PaymentTypeSvc.GetDetail(ctx.Request.Context(), id)
+	if err != nil {
+		errors.HandleServiceError(ctx, err)
+		return
+	}
+
+	resp := paymentTypeDTO.GetDetailResponse{
+		ID:       paymentTypeEntity.ID,
+		Name:     paymentTypeEntity.Name,
+		IsActive: paymentTypeEntity.IsActive,
+	}
+
+	response.SendSuccess(ctx, http.StatusOK, response.SuccessMessage, resp)
+}

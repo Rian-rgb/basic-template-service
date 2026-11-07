@@ -25,4 +25,9 @@ type IService interface {
 		ctx context.Context,
 		id uuid.UUID,
 	) error
+
+	GetDetail(
+		ctx context.Context,
+		id uuid.UUID,
+	) (*Entity, error)
 }

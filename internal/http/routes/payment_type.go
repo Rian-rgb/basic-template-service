@@ -33,4 +33,9 @@ func registerPaymentTypeRoutes(
 		"/:id",
 		dependency.PaymentTypeHdl.Delete,
 	)
+
+	paymentType.GET(
+		"/:id",
+		dependency.PaymentTypeHdl.GetDetail,
+	)
 }
